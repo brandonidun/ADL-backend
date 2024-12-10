@@ -29,7 +29,6 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info($request->all());
         $validated = $request->validate([
             'borrower_id' => 'required|exists:borrowers,id',
             'approval_date' => 'required|date',

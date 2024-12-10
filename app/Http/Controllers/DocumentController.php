@@ -98,8 +98,20 @@ class DocumentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Document $document)
+    public function updateBorrowerDocuments(Request $request, $borrowerId, $documentId)
     {
+        $borrower = Borrower::find($borrowerId);
+
+        if (!$borrower) {
+            return response()->json(['error' => 'Borrower not found'], 404);
+        }
+
+        $document = $borrower->documents()->find($documentId);
+
+        if (!$document) {
+            return response()->json(['error' => 'Document not found'], 404);
+        }
+
         $validated = $request->validate([
             'file_name' => 'Required|string',
             'file_path' => 'Required|string',
@@ -108,20 +120,53 @@ class DocumentController extends Controller
 
         $document->update($validated);
 
-        return response()->json($document);
+        return response()->json($document, 200);
+    }
+
+    public function updateLoanDocuments(Request $request, $loanId, $documentId)
+    {
+        $loan = Loan::find($loanId);
+        if (!$loan) {
+            return response()->json(['error' => 'Loan not found'], 404);
+        }
+
+        $document = $loan->documents()->find($documentId);
+        if (!$document) {
+            return response()->json(['error' => 'Document not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'file_name' => 'Required|string',
+            'file_path' => 'Required|string',
+            'file_type' => 'Required|string',
+        ]);
+
+        $document->update($validated);
+
+        return response()->json($document, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Document $document)
+
+    public function destroyBorrowerDocument($borrowerId, $documentId)
     {
-        $document = Document::findOrFail($id);
+        $borrower = Borrower::find($borrowerId);
+        $document = $borrower->documents()->find($documentId);
 
-        // Delete the file from storage
-        Storage::delete($document->file_path);
+        $document->delete();
 
-        // Delete the document record
+        return response()->json([
+            'message' => 'Document deleted successfully.',
+        ]);
+    }
+
+    public function destroyLoanDocument($borrowerId, $documentId)
+    {
+        $borrower = Borrower::find($borrowerId);
+        $document = $borrower->document()->find($documentId);
+
         $document->delete();
 
         return response()->json([

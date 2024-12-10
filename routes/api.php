@@ -21,14 +21,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('borrowers/{borrower}/documents', [DocumentController::class, 'indexBorrowerDocuments']);
     Route::get('borrowers/{borrower}/documents/{document}', [DocumentController::class, 'show']);
     Route::post('borrowers/{borrower}/documents', [DocumentController::class, 'storeBorrowerDocuments']);
-    Route::put('borrowers/{borrower}/documents/{document}', [DocumentController::class, 'update']);
-    Route::delete('borrowers/{borrower}/documents/{document}', [DocumentController::class, 'delete']);
+    Route::patch('borrowers/{borrower}/documents/{document}', [DocumentController::class, 'updateBorrowerDocuments']);
+    Route::delete('borrowers/{borrower}/documents/{document}', [DocumentController::class, 'destroyBorrowerDocument']);
 
     Route::get('loans/{loan}/documents', [DocumentController::class, 'indexLoanDocuments']);
     Route::get('loans/{loan}/documents/{document}', [DocumentController::class, 'show']);
     Route::post('loans/{loan}/documents', [DocumentController::class, 'storeLoanDocuments']);
-    Route::put('loans/{loan}/documents/{document}', [DocumentController::class, 'update']);
-    Route::delete('loans/{loan}/documents/{document}', [DocumentController::class, 'delete']);
+    Route::patch('loans/{loan}/documents/{document}', [DocumentController::class, 'updateLoanDocuments']);
+    Route::delete('loans/{loan}/documents/{document}', [DocumentController::class, 'destroyLoanDocument']);
 
     Route::apiResource('borrowers', BorrowerController::class);
 
